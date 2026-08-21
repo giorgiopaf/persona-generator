@@ -105,9 +105,10 @@ fails, tell the user to run `gcloud auth login` and proceed with clearly-labeled
 
 **Two linked databases.** The **Persona Database** holds one row per *master persona* (the
 umbrella category, e.g. `Interior Designers`); the **Persona Library** holds one row per
-*sub-persona* (`P###`), each linked back to its master. If a data source ID below ever fails to
-resolve, find the database by searching Notion for its name and use the current data source; if
-it truly doesn't exist, recreate it with the same schema.
+*sub-persona* (`P###`), each linked back to its master. Both live under the **Persona System**
+hub page (https://app.notion.com/p/3c38555c2abc81a4a50edd3cc150b5e5). If a data source ID below
+ever fails to resolve, find the database by searching Notion for its name and use the current
+data source; if it truly doesn't exist, recreate it with the same schema.
 
 **A. Persona Database (masters)** — one row per umbrella category.
 - Database: **Persona Database** — https://app.notion.com/p/159db9b455774311bbb525ddddfbdb91
