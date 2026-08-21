@@ -10,7 +10,8 @@ description: >-
   Works for any market (DTC consumers, gift-buyers, trade/wholesale, B2B, hospitality/contract),
   not just one vertical. Produces personas ONLY — never angles, offers, hooks, headlines, or
   campaigns (those are downstream agents). Optionally grounds personas against BigQuery for
-  demand signals and archives each finished set to the Notion "Persona Library" database.
+  demand signals; archives each master persona to the Notion "Persona Database" and every
+  sub-persona to the linked "Persona Library."
 ---
 
 # Persona Generator
@@ -100,22 +101,33 @@ backtick-escaped `\`americanflat.dataset.table\``, always LIMIT/WHERE). Then mar
 **Validated / Unclear / Refuted** so only personas with a pulse move downstream. If BQ auth
 fails, tell the user to run `gcloud auth login` and proceed with clearly-labeled hypotheses.
 
-## Step 5 — Archive to the Notion Persona Library
+## Step 5 — Archive to Notion (Persona Database + Persona Library)
 
-**One database, one row per persona.** If the data source ID ever fails to resolve, find the
-database by searching Notion for "Persona Library" and use the current data source; if it truly
-doesn't exist, recreate it with the same schema.
+**Two linked databases.** The **Persona Database** holds one row per *master persona* (the
+umbrella category, e.g. `Interior Designers`); the **Persona Library** holds one row per
+*sub-persona* (`P###`), each linked back to its master. If a data source ID below ever fails to
+resolve, find the database by searching Notion for its name and use the current data source; if
+it truly doesn't exist, recreate it with the same schema.
 
+**A. Persona Database (masters)** — one row per umbrella category.
+- Database: **Persona Database** — https://app.notion.com/p/159db9b455774311bbb525ddddfbdb91
+- Data source ID: `collection://21bc8a5f-f6a9-4152-a250-78b05a60cd73`
+- **Find-or-create** the master row for this run's category (match on **Master Persona** = the
+  category name; only create it if it doesn't already exist — don't duplicate a master):
+  - **Master Persona** (title) — the umbrella name, e.g. `Interior Designers`
+  - **Demographic**, **Product Context** — the run's inputs
+  - **Status** — `Draft` / `Active` / `Retired`
+- Keep the returned master-row URL; you link each sub-persona to it below. (The **Sub-personas**
+  relation back-fills automatically from the Library side.)
+
+**B. Persona Library (sub-personas)** — one row per persona.
 - Database: **Persona Library** — https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
 - Data source ID: `collection://c4c9eada-83c5-40ad-8f21-6c748faef00e`
 - Create one page per persona (`notion-create-pages`, parent = the data source ID):
   - **Persona ID** (title) — the permanent `P###` from Step 3
   - **Name** — the persona's descriptive name
   - **Segment** — e.g. Residential, Hotels, Healthcare
-  - **Set** — the umbrella category this run belongs to (a SELECT). Reuse the existing option if
-    the category already exists; otherwise add the option first with `update-data-source`
-    (`ALTER COLUMN "Set" SET SELECT(...)`) so grouping the view by **Set** shows each umbrella
-    cleanly. Keep option labels short (e.g. `Interior Designers`, `Gift Buyers`).
+  - **Master** — relation to the master row in Persona Database (pass its URL in an array)
   - **One-liner** — the persona-in-one-sentence
   - **Status** — `Draft` until validated/approved, then `Active`; `Retired` when burned (the ID
     stays burned — never reassigned)
@@ -124,9 +136,9 @@ doesn't exist, recreate it with the same schema.
     driver, trigger, current solution + why it falls short, buying priorities, objections, and
     natural-language quotes). This is where the depth lives.
 
-After writing, give the user the assigned ID range (e.g. P019–P023) and a link to the Library
-(grouped by **Set** to show the umbrella). In chat, still present the full personas plus a Final
-Persona Map for review.
+After writing, give the user links to the master row and the Library (filtered to this master),
+plus the assigned ID range (e.g. P019–P023). In chat, still present the full personas plus a
+Final Persona Map for review.
 
 ## Guardrails (from the methodology — worth repeating)
 
