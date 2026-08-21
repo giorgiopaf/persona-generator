@@ -61,26 +61,30 @@ upstream, is what lets the downstream Angle → Offer → Creative skills build 
 `P### → A## → O## → S###` lineage. (If IDs were assigned later at script time, "P01" could point
 at a different persona on every run — the opposite of stable.)
 
-**Format:** `P###` — a capital `P` plus a zero-padded, **globally sequential** number
-(P001, P002, …). Global, not per-category: `P007` refers to one specific persona forever, no
-matter which category run produced it. Category/segment is captured in separate fields, so you
-lose no grouping.
+**Format:** `P` + a **master-type letter** + a 2-digit number — e.g. `PI01` for Interior
+Designers, `PC01` for Commercial Artists. The letter identifies the master persona: by default
+its first letter; if two masters would collide on a letter, pick a distinct unused letter and
+note it on the master row. Numbering **restarts per master** (each master runs 01, 02, …), so
+`PI07` and `PC07` are different personas under different masters.
 
 **Assigning the next IDs:**
-1. Open the **Persona Library** (coordinates in Step 5) and find the highest existing `Persona ID`.
-2. Assign the next numbers in sequence to the new personas, in the order they appear. E.g. if the
-   registry's max is `P018`, a fresh run of 5 personas gets `P019`–`P023`.
+1. Determine the master's letter — an existing master reuses its letter; a new master takes its
+   first free letter.
+2. In the **Persona Library**, find the highest existing `Persona ID` beginning `P<letter>` and
+   continue from there. E.g. if `PI18` exists, the next Interior-Designer persona is `PI19`; a
+   brand-new Commercial-Artists master starts at `PC01`.
 
 **Immutability — this is the whole point, never violate it:**
 - Once assigned, a persona's ID is **never changed, reused, or renumbered** — not when you edit
-  the persona, not when you re-run the category, not when personas are added or removed.
-- Re-running a category does **not** reset numbering — always continue from the global max.
-- To remove a persona, set its Registry **Status** to `Retired`. The ID stays burned forever —
-  never reassign it to a different persona.
+  the persona, not when you re-run the master, not when personas are added or removed.
+- Re-running a master does **not** reset its numbering — always continue from that master's
+  highest existing number.
+- To remove a persona, set its **Status** to `Retired`. The ID stays burned forever — never
+  reassign it to a different persona.
 - If you rewrite a persona into a genuinely different one, **retire the old ID and mint a new
   one** rather than repurposing the old number.
 
-Surface each ID inline in chat (heading format `## P019 · [Name]`) and add an **ID** column as
+Surface each ID inline in chat (heading format `## PI19 · [Name]`) and add an **ID** column as
 the first column of the Final Persona Map.
 
 ## Step 4 — (Optional) Ground against BigQuery
@@ -120,10 +124,10 @@ data source; if it truly doesn't exist, recreate it with the same schema.
   - **Status** — `Draft` / `Active` / `Retired`
 - Keep the returned master-row URL; you link each sub-persona to it below. (The **Sub-personas**
   relation back-fills automatically from the Library side.)
-- After the sub-personas exist (section B), add a grouped, linked list of them into the **master
-  row's page body** (by segment, each a link to its `P###` page with its one-liner) so opening a
-  master shows its full sub-persona library at a glance — the relation property alone is easy to
-  miss.
+- So opening a master shows its sub-personas, give the **master row's page body** a view of them:
+  ideally an inline **linked view of the Persona Library filtered to this master** (added in the
+  Notion UI via `/Link to database`), or — as an API-createable fallback — a grouped linked list
+  (by segment, each linking its `P##` page).
 
 **B. Persona Library (sub-personas)** — one row per persona.
 - Database: **Persona Library** — https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
@@ -136,10 +140,13 @@ data source; if it truly doesn't exist, recreate it with the same schema.
   - **One-liner** — the persona-in-one-sentence
   - **Status** — `Draft` until validated/approved, then `Active`; `Retired` when burned (the ID
     stays burned — never reassigned)
-  - **Page body** — the persona's **full detail**: the complete block from the methodology output
-    format (in-one-sentence, job-to-be-done, problem, pain points, desired outcome, emotional
-    driver, trigger, current solution + why it falls short, buying priorities, objections, and
-    natural-language quotes). This is where the depth lives.
+  - **Page body** — the persona's **full detail**, laid out with the clean callout template (not
+    stacked headings): a **summary callout** (the one-sentence) → a **Segment** line → a
+    **Job-to-be-done** callout and a **Core-problem** callout → `## Pain points` → `## Buying
+    priorities` → a **snapshot callout** grouping Desired outcome / Emotional driver / Trigger /
+    Current solution → `## Objections` → `## In their words` (quotes). **Write real line breaks in
+    the content — never the literal characters `\n` or `\t`**, which render as a garbled single
+    paragraph.
 
 After writing, give the user links to the master row and the Library (filtered to this master),
 plus the assigned ID range (e.g. P019–P023). In chat, still present the full personas plus a

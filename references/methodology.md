@@ -76,7 +76,7 @@ If the market genuinely contains fewer meaningful personas than requested, say s
 Use this structure for each persona:
 
 ```
-## [Permanent ID, e.g. P019] · [Memorable Descriptive Name] — [segment tag, if a split was requested]
+## [Permanent ID, e.g. PI19] · [Memorable Descriptive Name] — [segment tag, if a split was requested]
 ### Persona in One Sentence
 ### Situation
 ### Primary Job to Be Done

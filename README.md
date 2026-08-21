@@ -29,10 +29,10 @@ If the demographic or count is missing, the skill asks before generating.
 
 ## Persona IDs (SKUs)
 
-Every persona is assigned a **permanent, globally-unique identifier** at creation — format
-`P###` (P001, P002, …), sequential and never reused or renumbered. This is the SKU that the
-downstream Angle → Offer → Creative skills reference to keep a stable `P### → A## → O## → S###`
-lineage. Retiring a persona sets its status to `Retired`; the ID stays burned forever.
+Every persona is assigned a **permanent identifier** at creation — format `P` + a master-type
+letter + a 2-digit number (e.g. `PI01` for Interior Designers, `PC01` for Commercial Artists),
+numbering restarting per master, never reused or renumbered. This is the SKU that the downstream
+Angle → Offer → Creative skills reference to keep a stable `P##→ A## → O## → S###` lineage. Retiring a persona sets its status to `Retired`; the ID stays burned forever.
 
 Personas live in two linked Notion databases:
 
