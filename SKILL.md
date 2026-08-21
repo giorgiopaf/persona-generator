@@ -120,6 +120,10 @@ data source; if it truly doesn't exist, recreate it with the same schema.
   - **Status** — `Draft` / `Active` / `Retired`
 - Keep the returned master-row URL; you link each sub-persona to it below. (The **Sub-personas**
   relation back-fills automatically from the Library side.)
+- After the sub-personas exist (section B), add a grouped, linked list of them into the **master
+  row's page body** (by segment, each a link to its `P###` page with its one-liner) so opening a
+  master shows its full sub-persona library at a glance — the relation property alone is easy to
+  miss.
 
 **B. Persona Library (sub-personas)** — one row per persona.
 - Database: **Persona Library** — https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
