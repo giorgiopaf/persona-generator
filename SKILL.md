@@ -66,7 +66,7 @@ matter which category run produced it. Category/segment is captured in separate 
 lose no grouping.
 
 **Assigning the next IDs:**
-1. Open the **Persona Registry** (coordinates in Step 5) and find the highest existing `Persona ID`.
+1. Open the **Persona Library** (coordinates in Step 5) and find the highest existing `Persona ID`.
 2. Assign the next numbers in sequence to the new personas, in the order they appear. E.g. if the
    registry's max is `P018`, a fresh run of 5 personas gets `P019`–`P023`.
 
@@ -100,42 +100,33 @@ backtick-escaped `\`americanflat.dataset.table\``, always LIMIT/WHERE). Then mar
 **Validated / Unclear / Refuted** so only personas with a pulse move downstream. If BQ auth
 fails, tell the user to run `gcloud auth login` and proceed with clearly-labeled hypotheses.
 
-## Step 5 — Archive to Notion (Library + Registry)
+## Step 5 — Archive to the Notion Persona Library
 
-Two databases, always written together. The **Library** is the *collapsed umbrella index* (set
-title + Persona Map); the **Registry** is the SKU master that holds each persona's permanent ID
-**and its full detail**. If a data source ID below ever fails to resolve, find the database by
-searching Notion for its name and use the current data source; if it truly doesn't exist,
-recreate it with the same schema.
+**One database, one row per persona.** If the data source ID ever fails to resolve, find the
+database by searching Notion for "Persona Library" and use the current data source; if it truly
+doesn't exist, recreate it with the same schema.
 
-**A. Persona Library** — one row per *set/run* (the collapsed umbrella index).
-- Database: https://app.notion.com/p/15afe072d91249e9be960afa8c949ce7
-- Data source ID: `collection://174e9036-3ab2-489d-88d1-5c25f1c4f5bc`
-- Create one page (`notion-create-pages`, parent = the data source ID):
-  - **Name** — e.g. `Interior Designers — Frames & Gallery Walls (18)`
-  - **Demographic**, **Product Context** — the inputs used
-  - **Personas** — the count (number) · **Split** — the segmentation split, if any
-  - **Status** — `Draft` (hypothesis-only), `BQ-Validated`, or `Final` (user-approved)
-  - **BQ Grounded** — checkbox
-  - **Page body (collapsed index only)** — a one-line intro plus the **Persona Map** table (with
-    its ID column). Do NOT put full persona blocks here; this page is just the umbrella index —
-    the per-persona depth lives in the Registry.
-- Keep the returned set-page URL; you need it for the Registry relation.
-
-**B. Persona Registry** — one row per *individual persona* (the SKU master + full detail).
-- Database: https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
+- Database: **Persona Library** — https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
 - Data source ID: `collection://c4c9eada-83c5-40ad-8f21-6c748faef00e`
-- Create one page per persona (`notion-create-pages`, parent = the registry data source ID):
+- Create one page per persona (`notion-create-pages`, parent = the data source ID):
   - **Persona ID** (title) — the permanent `P###` from Step 3
-  - **Name**, **Segment**, **One-liner** (the persona-in-one-sentence)
-  - **Status** — `Draft` until validated/approved, then `Active`; `Retired` when burned
-  - **Set** — relation to the Library set page (pass its URL in an array)
+  - **Name** — the persona's descriptive name
+  - **Segment** — e.g. Residential, Hotels, Healthcare
+  - **Set** — the umbrella category this run belongs to (a SELECT). Reuse the existing option if
+    the category already exists; otherwise add the option first with `update-data-source`
+    (`ALTER COLUMN "Set" SET SELECT(...)`) so grouping the view by **Set** shows each umbrella
+    cleanly. Keep option labels short (e.g. `Interior Designers`, `Gift Buyers`).
+  - **One-liner** — the persona-in-one-sentence
+  - **Status** — `Draft` until validated/approved, then `Active`; `Retired` when burned (the ID
+    stays burned — never reassigned)
   - **Page body** — the persona's **full detail**: the complete block from the methodology output
     format (in-one-sentence, job-to-be-done, problem, pain points, desired outcome, emotional
     driver, trigger, current solution + why it falls short, buying priorities, objections, and
     natural-language quotes). This is where the depth lives.
 
-After writing both, give the user the Library page link and the assigned ID range (e.g. P019–P023).
+After writing, give the user the assigned ID range (e.g. P019–P023) and a link to the Library
+(grouped by **Set** to show the umbrella). In chat, still present the full personas plus a Final
+Persona Map for review.
 
 ## Guardrails (from the methodology — worth repeating)
 
