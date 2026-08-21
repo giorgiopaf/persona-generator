@@ -27,6 +27,15 @@ build personas for [category]
 
 If the demographic or count is missing, the skill asks before generating.
 
+## Persona IDs (SKUs)
+
+Every persona is assigned a **permanent, globally-unique identifier** at creation — format
+`P###` (P001, P002, …), sequential and never reused or renumbered. This is the SKU that the
+downstream Angle → Offer → Creative skills reference to keep a stable `P### → A## → O## → S###`
+lineage. Retiring a persona sets its status to `Retired`; the ID stays burned forever. IDs are
+tracked in a Notion **Persona Registry** (one row per persona), separate from the per-set
+**Persona Library**.
+
 ## Structure
 
 ```

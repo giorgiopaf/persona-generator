@@ -76,7 +76,7 @@ If the market genuinely contains fewer meaningful personas than requested, say s
 Use this structure for each persona:
 
 ```
-## Persona [#]: [Memorable Descriptive Name] — [segment tag, if a split was requested]
+## [Permanent ID, e.g. P019] · [Memorable Descriptive Name] — [segment tag, if a split was requested]
 ### Persona in One Sentence
 ### Situation
 ### Primary Job to Be Done
@@ -101,7 +101,7 @@ the full treatment.
 
 A compact summary table across all personas:
 
-| Persona | Situation | Core Problem | Primary Desired Outcome | Trigger | #1 Buying Priority |
+| ID | Persona | Situation | Core Problem | Primary Desired Outcome | Trigger | #1 Buying Priority |
 
 Then, 1–2 sentences per persona: **what fundamentally makes this persona different from the
 others?** (Name the axis it owns.)
