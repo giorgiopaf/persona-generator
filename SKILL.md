@@ -102,12 +102,13 @@ fails, tell the user to run `gcloud auth login` and proceed with clearly-labeled
 
 ## Step 5 — Archive to Notion (Library + Registry)
 
-Two databases, always written together. The **Library** holds the full narrative set; the
-**Registry** is the SKU master that assigns/holds the permanent IDs. If a data source ID below
-ever fails to resolve, find the database by searching Notion for its name and use the current
-data source; if it truly doesn't exist, recreate it with the same schema.
+Two databases, always written together. The **Library** is the *collapsed umbrella index* (set
+title + Persona Map); the **Registry** is the SKU master that holds each persona's permanent ID
+**and its full detail**. If a data source ID below ever fails to resolve, find the database by
+searching Notion for its name and use the current data source; if it truly doesn't exist,
+recreate it with the same schema.
 
-**A. Persona Library** — one row per *set/run* (the full document).
+**A. Persona Library** — one row per *set/run* (the collapsed umbrella index).
 - Database: https://app.notion.com/p/15afe072d91249e9be960afa8c949ce7
 - Data source ID: `collection://174e9036-3ab2-489d-88d1-5c25f1c4f5bc`
 - Create one page (`notion-create-pages`, parent = the data source ID):
@@ -116,11 +117,12 @@ data source; if it truly doesn't exist, recreate it with the same schema.
   - **Personas** — the count (number) · **Split** — the segmentation split, if any
   - **Status** — `Draft` (hypothesis-only), `BQ-Validated`, or `Final` (user-approved)
   - **BQ Grounded** — checkbox
-  - **Page body** — the full content: every persona block (headed `## P### · [Name]`) **and** the
-    Final Persona Map (with its ID column). This is the durable artifact — include all of it.
+  - **Page body (collapsed index only)** — a one-line intro plus the **Persona Map** table (with
+    its ID column). Do NOT put full persona blocks here; this page is just the umbrella index —
+    the per-persona depth lives in the Registry.
 - Keep the returned set-page URL; you need it for the Registry relation.
 
-**B. Persona Registry** — one row per *individual persona* (the SKU master).
+**B. Persona Registry** — one row per *individual persona* (the SKU master + full detail).
 - Database: https://app.notion.com/p/4dea28d70b2c49bbaf6de53eefbcd530
 - Data source ID: `collection://c4c9eada-83c5-40ad-8f21-6c748faef00e`
 - Create one page per persona (`notion-create-pages`, parent = the registry data source ID):
@@ -128,6 +130,10 @@ data source; if it truly doesn't exist, recreate it with the same schema.
   - **Name**, **Segment**, **One-liner** (the persona-in-one-sentence)
   - **Status** — `Draft` until validated/approved, then `Active`; `Retired` when burned
   - **Set** — relation to the Library set page (pass its URL in an array)
+  - **Page body** — the persona's **full detail**: the complete block from the methodology output
+    format (in-one-sentence, job-to-be-done, problem, pain points, desired outcome, emotional
+    driver, trigger, current solution + why it falls short, buying priorities, objections, and
+    natural-language quotes). This is where the depth lives.
 
 After writing both, give the user the Library page link and the assigned ID range (e.g. P019–P023).
 
